@@ -1,0 +1,175 @@
+{
+  "name": "shellper",
+  "version": "0.0.1",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "clean": "rimraf dist dist-electron",
+    "dev": "cross-env NODE_ENV=development npm run clean && concurrently \"tsc -w -p tsconfig.electron.json\" \"vite\" \"wait-on http://localhost:54321 && electron ./dist-electron/main.js\"",
+    "build": "npm run clean && npm run build:electron && vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "build:mac": "npm run build && electron-builder --mac",
+    "dmg": "./build_mac.sh",
+    "verify": "./verify_environment.sh",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.shellper.app",
+    "productName": "ShellPer",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json",
+      "electron/post-install.js",
+      ".env"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "public"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "dist/**/*",
+      "node_modules/robotjs/**/*",
+      "node_modules/tesseract.js/**/*"
+    ],
+    "compression": "maximum",
+    "afterPack": "./electron/post-install.js",
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg"
+      ],
+      "artifactName": "${productName}-Mac-${arch}.${ext}",
+      "icon": "public/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": null,
+      "notarize": false,
+      "protocols": {
+        "name": "shellper-protocol",
+        "schemes": [
+          "shellper"
+        ]
+      },
+      "extraFiles": [
+        {
+          "from": "fix_shellper.sh",
+          "to": "fix_shellper.sh"
+        },
+        {
+          "from": "run_shellper.sh",
+          "to": "run_shellper.sh"
+        }
+      ],
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
+    "extraResources": [
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
+    "extraMetadata": {
+      "main": "dist-electron/main.js"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "An invisible desktop application to help you pass your technical interviews. Completely offline with local Ollama AI integration.",
+  "dependencies": {
+    "@electron/notarize": "^2.3.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.2",
+    "@tanstack/react-query": "^5.64.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "diff": "^7.0.0",
+    "dotenv": "^16.4.7",
+    "electron-log": "^5.2.4",
+    "electron-store": "^10.0.0",
+    "form-data": "^4.0.1",
+    "lucide-react": "^0.460.0",
+    "react": "^18.2.0",
+    "react-code-blocks": "^0.1.6",
+    "react-dom": "^18.2.0",
+    "react-hotkeys-hook": "^4.6.1",
+    "react-router-dom": "^6.28.1",
+    "react-syntax-highlighter": "^15.6.1",
+    "robotjs": "^0.6.0",
+    "tailwind-merge": "^2.5.5",
+    "tesseract.js": "^6.0.0",
+    "uuid": "^11.0.3"
+  },
+  "ollamaSetup": "Requires local Ollama installation with the shellper model. All processing happens locally with no external connections.",
+  "devDependencies": {
+    "@electron/typescript-definitions": "^8.14.0",
+    "@types/color": "^4.2.0",
+    "@types/diff": "^6.0.0",
+    "@types/electron-store": "^1.3.1",
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/screenshot-desktop": "^1.12.3",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^29.1.4",
+    "electron-builder": "^24.13.3",
+    "electron-is-dev": "^3.0.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.49",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vite-plugin-electron": "^0.28.4",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "wait-on": "^7.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
