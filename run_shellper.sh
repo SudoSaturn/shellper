@@ -13,32 +13,32 @@ check_environment() {
     
     # Check for Node.js
     if ! command -v node &> /dev/null; then
-        echo "⚠️ Node.js is not installed. Please install Node.js to run this application."
+        echo "Node.js is not installed. Please install Node.js to run this application."
         return 1
     fi
     
     # Check for npm
     if ! command -v npm &> /dev/null; then
-        echo "⚠️ npm is not installed. Please install npm to run this application."
+        echo "npm is not installed. Please install npm to run this application."
         return 1
     fi
     
     # Check for ImageMagick
     if ! command -v magick &> /dev/null; then
-        echo "⚠️ ImageMagick is not installed. Some features may not work properly."
+        echo "ImageMagick is not installed. Some features may not work properly."
         echo "   Consider running ./fix_shellper.sh to install dependencies."
     fi
     
     # Check for Ollama
     if ! command -v ollama &> /dev/null; then
-        echo "⚠️ Ollama is not installed. The app requires Ollama to function properly."
+        echo "Ollama is not installed. The app requires Ollama to function properly."
         echo "   Please install Ollama from https://ollama.ai"
     else
-        echo "✅ Ollama is installed"
+        echo "Ollama is installed"
         
         # Check if the model is installed
         if ! ollama list 2>/dev/null | grep -qi "shellper\|sudosaturn"; then
-            echo "⚠️ The 'SudoSaturn/Shellper' model is not installed in Ollama."
+            echo "The 'SudoSaturn/Shellper' model is not installed in Ollama."
             read -p "Would you like to pull the SudoSaturn/Shellper model now? (y/n) " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -46,17 +46,17 @@ check_environment() {
                 ollama pull SudoSaturn/Shellper
             fi
         else
-            echo "✅ SudoSaturn/Shellper model is installed"
+            echo "SudoSaturn/Shellper model is installed"
         fi
         
         # Check if Ollama service is running
         if ! curl -s localhost:11434/api/tags >/dev/null; then
-            echo "⚠️ Ollama service is not running. Starting it now..."
+            echo "Ollama service is not running. Starting it now..."
             ollama serve >/dev/null 2>&1 &
-            echo "✅ Ollama service started"
+            echo "Ollama service started"
             sleep 2  # Give it a moment to start
         else
-            echo "✅ Ollama service is running"
+            echo "Ollama service is running"
         fi
     fi
     
@@ -87,13 +87,13 @@ reset_app_data() {
     # Remove ShellPer data
     if [ -d "$APP_DATA_DIR" ]; then
         rm -rf "$APP_DATA_DIR"
-        echo "✅ ShellPer data reset"
+        echo "ShellPer data reset"
     fi
     
     # Remove Electron data
     if [ -d "$ELECTRON_DATA_DIR" ]; then
         rm -rf "$ELECTRON_DATA_DIR"
-        echo "✅ Electron data reset"
+        echo "Electron data reset"
     fi
 }
 
